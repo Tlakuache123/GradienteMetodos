@@ -3,7 +3,6 @@ import sympy as sp
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-
 from funciones_gradiente import decenso_gradiente, sgd
 
 
@@ -14,18 +13,13 @@ df = f.diff(x)
 lamb_fx = sp.lambdify(x, f, modules=["numpy"])
 lamb_dfx = sp.lambdify(x, df, modules=["numpy"])
 
-v, v_h = decenso_gradiente(gradiente=lamb_dfx, x_0=0, alpha=0.1)
+v, v_h, g_h = decenso_gradiente(gradiente=lamb_dfx, x_0=0, alpha=0.05)
 
 vals_x = np.linspace(-3, 3, 100)
 fx = lamb_fx(vals_x)
 vfx = lamb_fx(np.array(v_h))
 
-
-st.write(
-    """
-    # Descenso por gradiente
-"""
-)
+st.markdown("# Decenso por Gradiente")
 
 st.latex(r"x_{n+1} = x_n - \alpha * \nabla f(x)")
 
@@ -62,7 +56,7 @@ fig = go.Figure(data=fig1.data + fig2.data)
 st.write(
     r"""
 ### Caracteristicas
-- $\alpha$: 0.1
+- $\alpha$: 0.5
 - $x_0$: 0
 - Maximo de iteraciones: 100
 - Error: 1e-06
@@ -70,3 +64,9 @@ st.write(
 )
 st.plotly_chart(fig, use_container_width=True)
 st.write(f"Minimo calculado f({v}) = {lamb_fx(v)}")
+
+fig3 = px.line(y=g_h, markers=True)
+fig_2 = go.Figure(data=fig3.data)
+
+st.markdown("### Gradiente")
+st.plotly_chart(fig_2)
