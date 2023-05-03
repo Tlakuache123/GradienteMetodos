@@ -6,19 +6,6 @@ import plotly.express as px
 from funciones_gradiente import decenso_gradiente, sgd
 
 
-x, y = sp.symbols("x, y")
-f = x**4 - 5 * x**2 - 3 * x
-df = f.diff(x)
-
-lamb_fx = sp.lambdify(x, f, modules=["numpy"])
-lamb_dfx = sp.lambdify(x, df, modules=["numpy"])
-
-v, v_h, g_h = decenso_gradiente(gradiente=lamb_dfx, x_0=0, alpha=0.05)
-
-vals_x = np.linspace(-3, 3, 100)
-fx = lamb_fx(vals_x)
-vfx = lamb_fx(np.array(v_h))
-
 st.markdown("# Decenso por Gradiente")
 
 st.latex(r"x_{n+1} = x_n - \alpha * \nabla f(x)")
@@ -39,6 +26,22 @@ st.code(
     language="python",
 )
 
+x, y = sp.symbols("x, y")
+f = x**4 - 5 * x**2 - 3 * x
+df = f.diff(x)
+
+x_0 = st.number_input("Insert x_0", value=0)
+alpha = st.number_input("Insert alpha", value=0.05)
+
+lamb_fx = sp.lambdify(x, f, modules=["numpy"])
+lamb_dfx = sp.lambdify(x, df, modules=["numpy"])
+
+v, v_h, g_h = decenso_gradiente(gradiente=lamb_dfx, x_0=x_0, alpha=alpha)
+
+vals_x = np.linspace(-3, 3, 100)
+fx = lamb_fx(vals_x)
+vfx = lamb_fx(np.array(v_h))
+
 st.write("Nuestra funcion a evaluar")
 st.latex(f)
 
@@ -56,8 +59,6 @@ fig = go.Figure(data=fig1.data + fig2.data)
 st.write(
     r"""
 ### Caracteristicas
-- $\alpha$: 0.5
-- $x_0$: 0
 - Maximo de iteraciones: 100
 - Error: 1e-06
 """

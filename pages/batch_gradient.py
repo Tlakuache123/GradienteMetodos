@@ -7,8 +7,9 @@ from funciones_gradiente import batch
 
 st.markdown("# Decenso por gradiente (Batch)")
 
+hidden_cost = st.number_input("Ingresa el costo", value=0.5)
 height = np.array([167, 145, 170, 180, 189, 155, 163, 178, 173, 176])
-weight = height * 0.5
+weight = height * hidden_cost
 
 data = pd.DataFrame(list(zip(height, weight)), columns=["height", "weight"])
 x = data["height"]
